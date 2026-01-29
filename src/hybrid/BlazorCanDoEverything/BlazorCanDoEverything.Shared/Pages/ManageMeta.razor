@@ -19,8 +19,8 @@ else
         {
             <div class="card">
                 <div class="flex flex-row items-center gap-2">
-                    <MBTextField @bind-Value="category.Title" Style="flex: 2;" />
-                    <MBTextField @bind-Value="category.Color" Style="flex: 1;" />
+                    <MBTextField @bind-Value="category.Title" Style="flex: 2;" Label="Name" />
+                    <MBTextField @bind-Value="category.Color" Style="flex: 1;" Label="Color" />
                     <div style="width: 30px; height: 30px; background-color: @category.Color; border-radius: 4px;"></div>
                     <MBIconButton Icon="delete" @onclick="@(() => DeleteCategory(category))" />
                 </div>
@@ -29,14 +29,11 @@ else
     </div>
 
     <div class="flex flex-row gap-2 mb-4">
-        <MBButton ButtonStyle="@MBButtonStyle.ContainedRaised" @onclick="SaveCategories" Style="flex: 1;">
-            Save Categories
-        </MBButton>
+        <MBButton ButtonStyle="@MBButtonStyle.ContainedRaised" @onclick="SaveCategories" Style="flex: 1;" Label="Save Categories" />
         <MBButton ButtonStyle="@MBButtonStyle.Outlined" 
                   LeadingIcon="add"
-                  @onclick="AddCategory">
-            Add
-        </MBButton>
+                  @onclick="AddCategory"
+                  Label="Add" />
     </div>
 
     <h4 style="margin-bottom: 0.5rem;">Tags</h4>
@@ -46,8 +43,8 @@ else
         {
             <div class="card">
                 <div class="flex flex-row items-center gap-2">
-                    <MBTextField @bind-Value="tag.Title" Style="flex: 2;" />
-                    <MBTextField @bind-Value="tag.Color" Style="flex: 1;" />
+                    <MBTextField @bind-Value="tag.Title" Style="flex: 2;" Label="Name" />
+                    <MBTextField @bind-Value="tag.Color" Style="flex: 1;" Label="Color" />
                     <div style="width: 30px; height: 30px; background-color: @tag.Color; border-radius: 4px;"></div>
                     <MBIconButton Icon="delete" @onclick="@(() => DeleteTag(tag))" />
                 </div>
@@ -56,14 +53,11 @@ else
     </div>
 
     <div class="flex flex-row gap-2">
-        <MBButton ButtonStyle="@MBButtonStyle.ContainedRaised" @onclick="SaveTags" Style="flex: 1;">
-            Save Tags
-        </MBButton>
+        <MBButton ButtonStyle="@MBButtonStyle.ContainedRaised" @onclick="SaveTags" Style="flex: 1;" Label="Save Tags" />
         <MBButton ButtonStyle="@MBButtonStyle.Outlined" 
                   LeadingIcon="add"
-                  @onclick="AddTag">
-            Add
-        </MBButton>
+                  @onclick="AddTag"
+                  Label="Add" />
     </div>
 }
 

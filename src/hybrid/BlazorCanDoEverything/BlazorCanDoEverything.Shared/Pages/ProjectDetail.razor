@@ -10,17 +10,15 @@
 <div class="flex flex-row items-center mb-4">
     <MBButton ButtonStyle="@MBButtonStyle.Text" 
               LeadingIcon="arrow_back"
-              @onclick="GoBack">
-        Back
-    </MBButton>
+              @onclick="GoBack"
+              Label="Back" />
     <div style="flex: 1;"></div>
     @if (!_isNew)
     {
         <MBButton ButtonStyle="@MBButtonStyle.Outlined" 
                   LeadingIcon="delete"
-                  @onclick="DeleteProject">
-            Delete
-        </MBButton>
+                  @onclick="DeleteProject"
+                  Label="Delete" />
     }
 </div>
 
@@ -56,9 +54,8 @@ else
 
         <MBButton ButtonStyle="@MBButtonStyle.ContainedRaised" 
                   Style="width: 100%;"
-                  @onclick="SaveProject">
-            Save
-        </MBButton>
+                  @onclick="SaveProject"
+                  Label="Save" />
 
         @if (!_isNew)
         {
@@ -69,9 +66,8 @@ else
                 {
                     <MBButton ButtonStyle="@MBButtonStyle.Text" 
                               LeadingIcon="delete"
-                              @onclick="CleanCompletedTasks">
-                        Clean up
-                    </MBButton>
+                              @onclick="CleanCompletedTasks"
+                              Label="Clean up" />
                 }
             </div>
 
@@ -119,7 +115,24 @@ else
         try
         {
             _categories = await CategoryRepository.ListAsync();
-            _categoryItems = _categories.Select(c => new MBSelectElement<string> { SelectedValue = c.ID.ToString(), Label = c.Title }).ToArray();
+            
+            // Build category items with proper default
+            var items = new List<MBSelectElement<string>>();
+            if (!_categories.Any())
+            {
+                items.Add(new MBSelectElement<string> { SelectedValue = "0", Label = "No categories" });
+                _selectedCategoryId = "0";
+            }
+            else
+            {
+                items.AddRange(_categories.Select(c => new MBSelectElement<string> { SelectedValue = c.ID.ToString(), Label = c.Title }));
+                if (string.IsNullOrEmpty(_selectedCategoryId))
+                {
+                    _selectedCategoryId = _categories.First().ID.ToString();
+                }
+            }
+            _categoryItems = items.ToArray();
+            
             _allTags = await TagRepository.ListAsync();
 
             if (!_isNew)

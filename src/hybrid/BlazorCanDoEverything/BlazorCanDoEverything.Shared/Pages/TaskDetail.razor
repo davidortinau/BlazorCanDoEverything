@@ -8,17 +8,15 @@
 <div class="flex flex-row items-center mb-4">
     <MBButton ButtonStyle="@MBButtonStyle.Text" 
               LeadingIcon="arrow_back"
-              @onclick="GoBack">
-        Back
-    </MBButton>
+              @onclick="GoBack"
+              Label="Back" />
     <div style="flex: 1;"></div>
     @if (!_isNew)
     {
         <MBButton ButtonStyle="@MBButtonStyle.Outlined" 
                   LeadingIcon="delete"
-                  @onclick="DeleteTask">
-            Delete
-        </MBButton>
+                  @onclick="DeleteTask"
+                  Label="Delete" />
     }
 </div>
 
@@ -42,9 +40,8 @@ else
 
         <MBButton ButtonStyle="@MBButtonStyle.ContainedRaised" 
                   Style="width: 100%;"
-                  @onclick="SaveTask">
-            Save
-        </MBButton>
+                  @onclick="SaveTask"
+                  Label="Save" />
     </div>
 }
 
@@ -75,7 +72,19 @@ else
         try
         {
             _projects = await ProjectRepository.ListAsync();
-            _projectItems = _projects.Select(p => new MBSelectElement<string> { SelectedValue = p.ID.ToString(), Label = p.Name }).ToArray();
+            
+            // Build select items - always include a placeholder if needed
+            var items = new List<MBSelectElement<string>>();
+            if (!_projects.Any())
+            {
+                items.Add(new MBSelectElement<string> { SelectedValue = "0", Label = "No projects available" });
+                _selectedProjectId = "0";
+            }
+            else
+            {
+                items.AddRange(_projects.Select(p => new MBSelectElement<string> { SelectedValue = p.ID.ToString(), Label = p.Name }));
+            }
+            _projectItems = items.ToArray();
 
             if (!_isNew)
             {

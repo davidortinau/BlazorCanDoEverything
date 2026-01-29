@@ -7,7 +7,7 @@
 
 <PageTitle>Dashboard</PageTitle>
 
-<h3 style="margin-bottom: 1rem;">@Today</h3>
+<h3 style="margin-bottom: 1rem; color: var(--md-sys-color-on-background);">@Today</h3>
 
 @if (_isLoading)
 {
@@ -17,7 +17,7 @@ else
 {
     <CategoryChart Data="@_categoryData" Colors="@_categoryColors" />
 
-    <h4 style="margin: 1rem 0;">Projects</h4>
+    <h4 style="margin: 1rem 0; color: var(--md-sys-color-on-background);">Projects</h4>
     
     <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; margin-bottom: 1rem;">
         @foreach (var project in _projects)
@@ -27,7 +27,7 @@ else
     </div>
 
     <div class="flex flex-row items-center mb-4">
-        <h4 style="margin: 0;">Tasks</h4>
+        <h4 style="margin: 0; color: var(--md-sys-color-on-background);">Tasks</h4>
         <div style="flex: 1;"></div>
         @if (_tasks.Any(t => t.IsCompleted))
         {

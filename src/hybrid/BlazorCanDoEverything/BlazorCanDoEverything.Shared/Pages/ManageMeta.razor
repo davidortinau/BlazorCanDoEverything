@@ -4,7 +4,7 @@
 
 <PageTitle>Manage Meta</PageTitle>
 
-<h3 style="margin-bottom: 1rem;">Categories and Tags</h3>
+<h3 style="margin-bottom: 1rem; color: var(--md-sys-color-on-background);">Categories and Tags</h3>
 
 @if (_isLoading)
 {
@@ -12,7 +12,7 @@
 }
 else
 {
-    <h4 style="margin-bottom: 0.5rem;">Categories</h4>
+    <h4 style="margin-bottom: 0.5rem; color: var(--md-sys-color-on-background);">Categories</h4>
     
     <div class="flex flex-col gap-2 mb-4">
         @foreach (var category in _categories)
@@ -36,7 +36,7 @@ else
                   Label="Add" />
     </div>
 
-    <h4 style="margin-bottom: 0.5rem;">Tags</h4>
+    <h4 style="margin-bottom: 0.5rem; color: var(--md-sys-color-on-background);">Tags</h4>
     
     <div class="flex flex-col gap-2 mb-4">
         @foreach (var tag in _tags)

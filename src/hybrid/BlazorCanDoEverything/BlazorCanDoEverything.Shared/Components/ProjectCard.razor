@@ -1,7 +1,7 @@
 <div class="card" style="width: 200px; min-height: 150px; cursor: pointer;" @onclick="OnCardClick">
     <div class="flex flex-col gap-2" style="height: 100%;">
-        <h5 style="margin: 0; font-size: 1.1rem; font-weight: 500;">@Project.Name</h5>
-        <p style="margin: 0; opacity: 0.7; font-size: 0.9rem;">@Project.Description</p>
+        <h5 style="margin: 0; font-size: 1.1rem; font-weight: 500; color: var(--md-sys-color-on-surface);">@Project.Name</h5>
+        <p style="margin: 0; font-size: 0.9rem; color: var(--md-sys-color-on-surface-variant);">@Project.Description</p>
         <div style="flex: 1;"></div>
         <div class="flex flex-row flex-wrap gap-1">
             @if (Project.Tags != null)
@@ -14,7 +14,7 @@
                 }
             }
         </div>
-        <span style="font-size: 0.75rem; opacity: 0.6;">
+        <span style="font-size: 0.75rem; color: var(--md-sys-color-on-surface-variant);">
             @(Project.Tasks?.Count ?? 0) tasks
         </span>
     </div>

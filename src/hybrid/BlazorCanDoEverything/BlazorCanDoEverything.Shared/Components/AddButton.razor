@@ -1,10 +1,9 @@
 @inject NavigationManager Navigation
 
-<MBButton ButtonStyle="@MBButtonStyle.ContainedRaised"
-          LeadingIcon="add"
-          Style="position: fixed; bottom: 2rem; right: 2rem; border-radius: 50%; min-width: 56px; height: 56px; z-index: 100;"
-          @onclick="@HandleClick">
-</MBButton>
+<MBFloatingActionButton Icon="add"
+                        Label="@Title"
+                        Style="position: fixed; bottom: 2rem; right: 2rem; z-index: 100;"
+                        @onclick="@HandleClick" />
 
 @code {
     [Parameter] public string Title { get; set; } = "Add";

@@ -42,7 +42,7 @@ else
                   Items="@_categoryItems"
                   Style="width: 100%;" />
 
-        <h5 style="margin: 0;">Tags</h5>
+        <h5 style="margin: 0; color: var(--md-sys-color-on-surface);">Tags</h5>
         <div class="flex flex-row flex-wrap gap-2">
             @foreach (var tag in _allTags)
             {
@@ -60,7 +60,7 @@ else
         @if (!_isNew)
         {
             <div class="flex flex-row items-center">
-                <h5 style="margin: 0;">Tasks</h5>
+                <h5 style="margin: 0; color: var(--md-sys-color-on-surface);">Tasks</h5>
                 <div style="flex: 1;"></div>
                 @if (_tasks.Any(t => t.IsCompleted))
                 {

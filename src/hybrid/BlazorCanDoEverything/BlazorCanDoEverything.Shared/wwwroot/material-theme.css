@@ -138,6 +138,11 @@ body {
     margin: 0;
     font-size: 1.25rem;
     font-weight: 500;
+    color: var(--app-header-text);
+}
+
+.app-header .material-icons {
+    color: var(--app-header-text);
 }
 
 .app-main {
@@ -252,4 +257,268 @@ h1, h2, h3, h4, h5, h6 {
     word-wrap: normal;
     direction: ltr;
     -webkit-font-smoothing: antialiased;
+}
+
+/* FAB (Floating Action Button) - use primary color */
+.mdc-fab {
+    background-color: var(--md-sys-color-primary) !important;
+    --mdc-fab-container-color: var(--md-sys-color-primary);
+}
+
+.mdc-fab .mdc-fab__icon {
+    color: var(--md-sys-color-on-primary) !important;
+}
+
+.mdc-fab .mdc-fab__label {
+    color: var(--md-sys-color-on-primary) !important;
+}
+
+/* ===== Material.Blazor Component Overrides for Dark Mode ===== */
+
+/* Text Fields */
+.mdc-text-field {
+    --mdc-theme-primary: var(--md-sys-color-primary);
+    --mdc-theme-on-surface: var(--md-sys-color-on-surface);
+}
+
+.mdc-text-field--filled {
+    background-color: var(--md-sys-color-surface-container-high) !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input {
+    color: var(--md-sys-color-on-surface) !important;
+}
+
+.mdc-text-field--filled .mdc-floating-label {
+    color: var(--md-sys-color-on-surface-variant) !important;
+}
+
+.mdc-text-field--filled .mdc-floating-label--float-above {
+    color: var(--md-sys-color-primary) !important;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+    color: var(--md-sys-color-on-surface) !important;
+}
+
+.mdc-text-field--outlined .mdc-notched-outline__leading,
+.mdc-text-field--outlined .mdc-notched-outline__notch,
+.mdc-text-field--outlined .mdc-notched-outline__trailing {
+    border-color: var(--md-sys-color-outline) !important;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__leading,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__notch,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover .mdc-notched-outline .mdc-notched-outline__trailing {
+    border-color: var(--md-sys-color-on-surface) !important;
+}
+
+.mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__leading,
+.mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__notch,
+.mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline__trailing {
+    border-color: var(--md-sys-color-primary) !important;
+}
+
+.mdc-text-field .mdc-floating-label {
+    color: var(--md-sys-color-on-surface-variant) !important;
+}
+
+.mdc-text-field.mdc-text-field--focused .mdc-floating-label {
+    color: var(--md-sys-color-primary) !important;
+}
+
+.mdc-line-ripple::before {
+    border-bottom-color: var(--md-sys-color-on-surface-variant) !important;
+}
+
+.mdc-line-ripple::after {
+    border-bottom-color: var(--md-sys-color-primary) !important;
+}
+
+/* Select / Dropdown */
+.mdc-select {
+    --mdc-theme-primary: var(--md-sys-color-primary);
+}
+
+.mdc-select:not(.mdc-select--disabled) .mdc-select__selected-text {
+    color: var(--md-sys-color-on-surface) !important;
+}
+
+.mdc-select--filled:not(.mdc-select--disabled) {
+    background-color: var(--md-sys-color-surface-container-high) !important;
+}
+
+.mdc-select .mdc-floating-label {
+    color: var(--md-sys-color-on-surface-variant) !important;
+}
+
+.mdc-select.mdc-select--focused .mdc-floating-label {
+    color: var(--md-sys-color-primary) !important;
+}
+
+.mdc-select--outlined .mdc-notched-outline__leading,
+.mdc-select--outlined .mdc-notched-outline__notch,
+.mdc-select--outlined .mdc-notched-outline__trailing {
+    border-color: var(--md-sys-color-outline) !important;
+}
+
+.mdc-select--outlined.mdc-select--focused .mdc-notched-outline__leading,
+.mdc-select--outlined.mdc-select--focused .mdc-notched-outline__notch,
+.mdc-select--outlined.mdc-select--focused .mdc-notched-outline__trailing {
+    border-color: var(--md-sys-color-primary) !important;
+}
+
+.mdc-select__dropdown-icon {
+    fill: var(--md-sys-color-on-surface-variant) !important;
+}
+
+.mdc-select--focused .mdc-select__dropdown-icon {
+    fill: var(--md-sys-color-primary) !important;
+}
+
+/* Select Menu (dropdown list) */
+.mdc-menu-surface {
+    background-color: var(--md-sys-color-surface-container) !important;
+}
+
+.mdc-deprecated-list-item {
+    color: var(--md-sys-color-on-surface) !important;
+}
+
+.mdc-deprecated-list-item--selected,
+.mdc-deprecated-list-item--activated {
+    color: var(--md-sys-color-on-surface) !important;
+}
+
+.mdc-deprecated-list-item:hover::before {
+    background-color: var(--md-sys-color-on-surface) !important;
+    opacity: 0.08;
+}
+
+/* Checkbox */
+.mdc-checkbox {
+    --mdc-theme-secondary: var(--md-sys-color-primary);
+    --mdc-theme-on-secondary: var(--md-sys-color-on-primary);
+}
+
+.mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true]) ~ .mdc-checkbox__background {
+    border-color: var(--md-sys-color-on-surface-variant) !important;
+    background-color: transparent !important;
+}
+
+.mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background,
+.mdc-checkbox__native-control[data-indeterminate=true]:enabled ~ .mdc-checkbox__background {
+    border-color: var(--md-sys-color-primary) !important;
+    background-color: var(--md-sys-color-primary) !important;
+}
+
+.mdc-checkbox__checkmark {
+    color: var(--md-sys-color-on-primary) !important;
+}
+
+.mdc-checkbox__mixedmark {
+    border-color: var(--md-sys-color-on-primary) !important;
+}
+
+/* Checkbox label */
+.mdc-form-field {
+    color: var(--md-sys-color-on-surface) !important;
+}
+
+.mdc-form-field > label {
+    color: var(--md-sys-color-on-surface) !important;
+}
+
+/* Buttons */
+/* Text Button */
+.mdc-button--outlined:not(:disabled),
+.mdc-button:not(:disabled) {
+    color: var(--md-sys-color-primary) !important;
+}
+
+.mdc-button--outlined:not(:disabled) {
+    border-color: var(--md-sys-color-outline) !important;
+}
+
+.mdc-button--outlined:hover:not(:disabled) {
+    border-color: var(--md-sys-color-primary) !important;
+}
+
+/* Contained/Raised Button */
+.mdc-button--raised:not(:disabled),
+.mdc-button--unelevated:not(:disabled) {
+    background-color: var(--md-sys-color-primary) !important;
+    color: var(--md-sys-color-on-primary) !important;
+}
+
+/* Icon Buttons */
+.mdc-icon-button {
+    color: var(--md-sys-color-on-surface-variant) !important;
+}
+
+.mdc-icon-button:hover {
+    color: var(--md-sys-color-on-surface) !important;
+}
+
+/* Header icon button should be light */
+.app-header .mdc-icon-button {
+    color: var(--app-header-text) !important;
+}
+
+/* Circular Progress */
+.mdc-circular-progress__determinate-circle,
+.mdc-circular-progress__indeterminate-circle-graphic {
+    stroke: var(--md-sys-color-primary) !important;
+}
+
+/* Chips */
+.chip {
+    background-color: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+}
+
+/* Ripple effects */
+.mdc-ripple-surface::before,
+.mdc-ripple-surface::after {
+    background-color: var(--md-sys-color-primary);
+}
+
+/* List items in menus */
+.mdc-list-item {
+    color: var(--md-sys-color-on-surface) !important;
+}
+
+.mdc-list-item__primary-text {
+    color: var(--md-sys-color-on-surface) !important;
+}
+
+.mdc-list-item__secondary-text {
+    color: var(--md-sys-color-on-surface-variant) !important;
+}
+
+/* Dialog */
+.mdc-dialog__surface {
+    background-color: var(--md-sys-color-surface) !important;
+}
+
+.mdc-dialog__title {
+    color: var(--md-sys-color-on-surface) !important;
+}
+
+.mdc-dialog__content {
+    color: var(--md-sys-color-on-surface-variant) !important;
+}
+
+/* Snackbar */
+.mdc-snackbar__surface {
+    background-color: var(--md-sys-color-inverse-surface) !important;
+}
+
+.mdc-snackbar__label {
+    color: var(--md-sys-color-inverse-on-surface) !important;
+}
+
+.mdc-snackbar__action:not(:disabled) {
+    color: var(--md-sys-color-inverse-primary) !important;
 }

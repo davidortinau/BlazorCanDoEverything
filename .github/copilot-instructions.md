@@ -7,6 +7,56 @@ This repository contains two parallel implementations of a task/project manageme
 - **`src/native/`** - Native .NET MAUI app using XAML/MVVM
 - **`src/hybrid/`** - Blazor Hybrid app with code sharing between MAUI and web
 
+## Verification Requirements
+
+**MANDATORY**: All changes must be verified before declaring work complete. Never say "should work" or "refresh to see changes" without first confirming the fix yourself.
+
+### Verification Methods
+
+1. **Unit Tests**: Run existing tests with `dotnet test`. Add tests for new functionality.
+
+2. **UI Tests - Web (Playwright)**:
+   ```bash
+   # Playwright is installed via pip3
+   python3 -c "from playwright.sync_api import sync_playwright; ..."
+   ```
+   - Start web server: `dotnet watch run --project BlazorCanDoEverything.Web`
+   - Write Playwright scripts to verify UI behavior
+   - Check element visibility, colors, text content, interactions
+
+3. **UI Tests - MAUI (Appium)**:
+   - Use `appium-automation` skill for iOS/Android/Mac Catalyst
+   - Verify visual elements and interactions on device
+
+4. **Visual Verification**:
+   - Use `curl` to fetch rendered HTML and grep for expected content
+   - Check CSS properties via Playwright's `page.evaluate()`
+
+5. **Log Inspection**:
+   - Use `maui-diagnostics` skill for runtime logs
+   - Add Console.WriteLine or ILogger statements to trace execution
+
+### Verification Workflow
+
+```
+1. Understand the problem (inspect current code/behavior)
+2. Create a plan (present to user for approval in PLAN mode)
+3. Implement changes (only after plan approval)
+4. Verify the fix:
+   - Run automated tests if available
+   - Use Playwright/Appium to confirm UI changes
+   - Check logs for expected behavior
+5. Iterate if verification fails
+6. Only report success after verification passes
+```
+
+### Never Do
+
+- Assume changes work without verification
+- Tell user to "refresh and check" without checking yourself first
+- Skip the verification step due to time or complexity
+- Declare success based on "the code looks correct"
+
 ## Build Commands
 
 ```bash

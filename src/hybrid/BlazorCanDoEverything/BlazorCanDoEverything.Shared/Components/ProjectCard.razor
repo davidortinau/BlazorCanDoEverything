@@ -8,8 +8,8 @@
             {
                 @foreach (var tag in Project.Tags.Take(3))
                 {
-                    <FluentBadge Appearance="Appearance.Accent" 
-                                 Style="@($"background-color: {tag.Color}; margin: 2px;")">
+                    <FluentBadge Fill="highlight"
+                                 Style="@($"--badge-fill-highlight: {tag.Color}; --badge-color-highlight: white; margin: 2px;")">
                         @tag.Title
                     </FluentBadge>
                 }

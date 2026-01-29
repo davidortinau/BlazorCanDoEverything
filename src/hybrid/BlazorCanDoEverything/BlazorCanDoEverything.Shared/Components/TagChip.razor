@@ -1,4 +1,5 @@
-<FluentBadge Appearance="@(IsSelected ? Appearance.Accent : Appearance.Neutral)"
+<FluentBadge Fill="@(IsSelected ? "highlight" : null)"
+             Appearance="@(IsSelected ? Appearance.Neutral : Appearance.Neutral)"
              Style="@GetStyle()"
              @onclick="OnChipClick">
     @Tag.Title
@@ -11,11 +12,12 @@
 
     private string GetStyle()
     {
+        var baseStyle = "cursor: pointer; padding: 0.25rem 0.5rem;";
         if (IsSelected)
         {
-            return $"background-color: {Tag.Color}; cursor: pointer; padding: 0.25rem 0.5rem;";
+            return $"--badge-fill-highlight: {Tag.Color}; --badge-color-highlight: white; {baseStyle}";
         }
-        return "cursor: pointer; padding: 0.25rem 0.5rem;";
+        return baseStyle;
     }
 
     private async Task OnChipClick()

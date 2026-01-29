@@ -1,11 +1,10 @@
 @inject NavigationManager Navigation
 
-<FluentButton Appearance="Appearance.Accent"
-              IconStart="@(new Icons.Regular.Size24.Add())"
-              Style="position: fixed; bottom: 2rem; right: 2rem; border-radius: 50%; width: 56px; height: 56px; z-index: 100;"
-              Title="@Title"
-              OnClick="@OnClick">
-</FluentButton>
+<MBButton ButtonStyle="@MBButtonStyle.ContainedRaised"
+          LeadingIcon="add"
+          Style="position: fixed; bottom: 2rem; right: 2rem; border-radius: 50%; min-width: 56px; height: 56px; z-index: 100;"
+          @onclick="@HandleClick">
+</MBButton>
 
 @code {
     [Parameter] public string Title { get; set; } = "Add";

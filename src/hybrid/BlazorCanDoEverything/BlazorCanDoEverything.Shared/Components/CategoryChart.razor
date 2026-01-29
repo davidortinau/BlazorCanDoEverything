@@ -1,29 +1,29 @@
-<FluentCard Style="padding: 1rem; margin-bottom: 1rem;">
-    <FluentLabel Typo="Typography.H5" Style="margin-bottom: 1rem;">Task Categories</FluentLabel>
+<div class="card" style="padding: 1rem; margin-bottom: 1rem;">
+    <h5 style="margin: 0 0 1rem 0; font-weight: 500;">Task Categories</h5>
     
     @if (Data != null && Data.Any())
     {
-        <FluentStack Orientation="Orientation.Vertical" Style="gap: 0.5rem;">
+        <div class="flex flex-col gap-2">
             @foreach (var item in Data)
             {
                 var color = GetColorForCategory(item.Title);
                 var percentage = TotalCount > 0 ? (item.Count * 100.0 / TotalCount) : 0;
                 
-                <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="width: 100%;">
-                    <FluentLabel Style="width: 120px;">@item.Title</FluentLabel>
-                    <div style="flex: 1; background-color: var(--neutral-layer-3); border-radius: 4px; height: 24px; overflow: hidden;">
+                <div class="flex flex-row items-center gap-2" style="width: 100%;">
+                    <span style="width: 120px;">@item.Title</span>
+                    <div style="flex: 1; background-color: var(--md-sys-color-surface-variant); border-radius: 4px; height: 24px; overflow: hidden;">
                         <div style="width: @(percentage)%; background-color: @color; height: 100%; transition: width 0.3s;"></div>
                     </div>
-                    <FluentLabel Style="width: 40px; text-align: right;">@item.Count</FluentLabel>
-                </FluentStack>
+                    <span style="width: 40px; text-align: right;">@item.Count</span>
+                </div>
             }
-        </FluentStack>
+        </div>
     }
     else
     {
-        <FluentLabel>No data available</FluentLabel>
+        <p>No data available</p>
     }
-</FluentCard>
+</div>
 
 @code {
     [Parameter] public List<CategoryChartData>? Data { get; set; }

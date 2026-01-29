@@ -1,17 +1,14 @@
-<FluentNavMenu Width="250" Collapsible="true" Title="Navigation">
-    <FluentNavLink Href="/" Match="NavLinkMatch.All" 
-                   Icon="@(new Icons.Regular.Size20.Home())"
-                   IconColor="Color.Accent">
+<nav class="app-nav">
+    <NavLink href="/" Match="NavLinkMatch.All" class="nav-link">
+        <span class="material-icons">dashboard</span>
         Dashboard
-    </FluentNavLink>
-    <FluentNavLink Href="/projects" 
-                   Icon="@(new Icons.Regular.Size20.FolderOpen())"
-                   IconColor="Color.Accent">
+    </NavLink>
+    <NavLink href="/projects" class="nav-link">
+        <span class="material-icons">folder_open</span>
         Projects
-    </FluentNavLink>
-    <FluentNavLink Href="/manage" 
-                   Icon="@(new Icons.Regular.Size20.Settings())"
-                   IconColor="Color.Accent">
+    </NavLink>
+    <NavLink href="/manage" class="nav-link">
+        <span class="material-icons">settings</span>
         Manage Meta
-    </FluentNavLink>
-</FluentNavMenu>
+    </NavLink>
+</nav>

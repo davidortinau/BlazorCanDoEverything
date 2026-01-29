@@ -4,71 +4,67 @@
 
 <PageTitle>Manage Meta</PageTitle>
 
-<FluentLabel Typo="Typography.H3" Style="margin-bottom: 1rem;">Categories and Tags</FluentLabel>
+<h3 style="margin-bottom: 1rem;">Categories and Tags</h3>
 
 @if (_isLoading)
 {
-    <FluentProgressRing />
+    <MBCircularProgress />
 }
 else
 {
-    <FluentLabel Typo="Typography.H4" Style="margin-bottom: 0.5rem;">Categories</FluentLabel>
+    <h4 style="margin-bottom: 0.5rem;">Categories</h4>
     
-    <FluentStack Orientation="Orientation.Vertical" Style="gap: 0.5rem; margin-bottom: 1rem;">
+    <div class="flex flex-col gap-2 mb-4">
         @foreach (var category in _categories)
         {
-            <FluentCard>
-                <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="gap: 0.5rem;">
-                    <FluentTextField @bind-Value="category.Title" Style="flex: 2;" />
-                    <FluentTextField @bind-Value="category.Color" Style="flex: 1;" />
+            <div class="card">
+                <div class="flex flex-row items-center gap-2">
+                    <MBTextField @bind-Value="category.Title" Style="flex: 2;" />
+                    <MBTextField @bind-Value="category.Color" Style="flex: 1;" />
                     <div style="width: 30px; height: 30px; background-color: @category.Color; border-radius: 4px;"></div>
-                    <FluentButton Appearance="Appearance.Stealth"
-                                  IconStart="@(new Icons.Regular.Size20.Delete())"
-                                  OnClick="@(() => DeleteCategory(category))" />
-                </FluentStack>
-            </FluentCard>
+                    <MBIconButton Icon="delete" @onclick="@(() => DeleteCategory(category))" />
+                </div>
+            </div>
         }
-    </FluentStack>
+    </div>
 
-    <FluentStack Orientation="Orientation.Horizontal" Style="gap: 0.5rem; margin-bottom: 2rem;">
-        <FluentButton Appearance="Appearance.Accent" OnClick="SaveCategories" Style="flex: 1;">
+    <div class="flex flex-row gap-2 mb-4">
+        <MBButton ButtonStyle="@MBButtonStyle.ContainedRaised" @onclick="SaveCategories" Style="flex: 1;">
             Save Categories
-        </FluentButton>
-        <FluentButton Appearance="Appearance.Outline" 
-                      IconStart="@(new Icons.Regular.Size20.Add())"
-                      OnClick="AddCategory">
+        </MBButton>
+        <MBButton ButtonStyle="@MBButtonStyle.Outlined" 
+                  LeadingIcon="add"
+                  @onclick="AddCategory">
             Add
-        </FluentButton>
-    </FluentStack>
+        </MBButton>
+    </div>
 
-    <FluentLabel Typo="Typography.H4" Style="margin-bottom: 0.5rem;">Tags</FluentLabel>
+    <h4 style="margin-bottom: 0.5rem;">Tags</h4>
     
-    <FluentStack Orientation="Orientation.Vertical" Style="gap: 0.5rem; margin-bottom: 1rem;">
+    <div class="flex flex-col gap-2 mb-4">
         @foreach (var tag in _tags)
         {
-            <FluentCard>
-                <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="gap: 0.5rem;">
-                    <FluentTextField @bind-Value="tag.Title" Style="flex: 2;" />
-                    <FluentTextField @bind-Value="tag.Color" Style="flex: 1;" />
+            <div class="card">
+                <div class="flex flex-row items-center gap-2">
+                    <MBTextField @bind-Value="tag.Title" Style="flex: 2;" />
+                    <MBTextField @bind-Value="tag.Color" Style="flex: 1;" />
                     <div style="width: 30px; height: 30px; background-color: @tag.Color; border-radius: 4px;"></div>
-                    <FluentButton Appearance="Appearance.Stealth"
-                                  IconStart="@(new Icons.Regular.Size20.Delete())"
-                                  OnClick="@(() => DeleteTag(tag))" />
-                </FluentStack>
-            </FluentCard>
+                    <MBIconButton Icon="delete" @onclick="@(() => DeleteTag(tag))" />
+                </div>
+            </div>
         }
-    </FluentStack>
+    </div>
 
-    <FluentStack Orientation="Orientation.Horizontal" Style="gap: 0.5rem;">
-        <FluentButton Appearance="Appearance.Accent" OnClick="SaveTags" Style="flex: 1;">
+    <div class="flex flex-row gap-2">
+        <MBButton ButtonStyle="@MBButtonStyle.ContainedRaised" @onclick="SaveTags" Style="flex: 1;">
             Save Tags
-        </FluentButton>
-        <FluentButton Appearance="Appearance.Outline" 
-                      IconStart="@(new Icons.Regular.Size20.Add())"
-                      OnClick="AddTag">
+        </MBButton>
+        <MBButton ButtonStyle="@MBButtonStyle.Outlined" 
+                  LeadingIcon="add"
+                  @onclick="AddTag">
             Add
-        </FluentButton>
-    </FluentStack>
+        </MBButton>
+    </div>
 }
 
 @code {

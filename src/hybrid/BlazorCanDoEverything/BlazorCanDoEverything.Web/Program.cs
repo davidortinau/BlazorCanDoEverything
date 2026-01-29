@@ -2,7 +2,7 @@ using BlazorCanDoEverything.Web.Components;
 using BlazorCanDoEverything.Shared.Services;
 using BlazorCanDoEverything.Web.Services;
 using BlazorCanDoEverything.Web.Data;
-using Microsoft.FluentUI.AspNetCore.Components;
+using Material.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Add FluentUI
-builder.Services.AddFluentUIComponents();
+// Add Material.Blazor
+builder.Services.AddMBServices();
 
 // Add device-specific services used by the BlazorCanDoEverything.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();

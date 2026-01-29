@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.FluentUI.AspNetCore.Components;
+using Material.Blazor;
 using BlazorCanDoEverything.Shared.Services;
 using BlazorCanDoEverything.Services;
 using BlazorCanDoEverything.Data;
@@ -21,8 +21,8 @@ public static class MauiProgram
         // Add device-specific services used by the BlazorCanDoEverything.Shared project
         builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
-        // Add FluentUI
-        builder.Services.AddFluentUIComponents();
+        // Add Material.Blazor
+        builder.Services.AddMBServices();
 
         // Add data repositories (in-memory for now, can switch to SQLite)
         builder.Services.AddSingleton<ITaskRepository, InMemoryTaskRepository>();

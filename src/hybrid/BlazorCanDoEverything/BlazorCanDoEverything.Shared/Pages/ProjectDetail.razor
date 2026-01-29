@@ -7,83 +7,84 @@
 
 <PageTitle>@(_isNew ? "New Project" : "Project")</PageTitle>
 
-<FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="margin-bottom: 1rem;">
-    <FluentButton Appearance="Appearance.Stealth" 
-                  IconStart="@(new Icons.Regular.Size20.ArrowLeft())"
-                  OnClick="GoBack">
+<div class="flex flex-row items-center mb-4">
+    <MBButton ButtonStyle="@MBButtonStyle.Text" 
+              LeadingIcon="arrow_back"
+              @onclick="GoBack">
         Back
-    </FluentButton>
-    <FluentSpacer />
+    </MBButton>
+    <div style="flex: 1;"></div>
     @if (!_isNew)
     {
-        <FluentButton Appearance="Appearance.Outline" 
-                      IconStart="@(new Icons.Regular.Size20.Delete())"
-                      OnClick="DeleteProject">
+        <MBButton ButtonStyle="@MBButtonStyle.Outlined" 
+                  LeadingIcon="delete"
+                  @onclick="DeleteProject">
             Delete
-        </FluentButton>
+        </MBButton>
     }
-</FluentStack>
+</div>
 
 @if (_isLoading)
 {
-    <FluentProgressRing />
+    <MBCircularProgress />
 }
 else
 {
-    <FluentStack Orientation="Orientation.Vertical" Style="gap: 1rem; max-width: 600px;">
-        <FluentTextField @bind-Value="_name" Label="Name" Style="width: 100%;" />
+    <div class="flex flex-col gap-4" style="max-width: 600px;">
+        <MBTextField @bind-Value="_name" 
+                     Label="Name" 
+                     Style="width: 100%;" />
         
-        <FluentTextField @bind-Value="_description" Label="Description" Style="width: 100%;" />
+        <MBTextField @bind-Value="_description" 
+                     Label="Description" 
+                     Style="width: 100%;" />
 
-        <FluentSelect TOption="Category"
-                      Label="Category"
-                      Items="@_categories"
-                      OptionText="@(c => c.Title)"
-                      OptionValue="@(c => c.ID.ToString())"
-                      @bind-SelectedOption="_selectedCategory"
-                      Style="width: 100%;" />
+        <MBSelect @bind-Value="_selectedCategoryId"
+                  Label="Category"
+                  Items="@_categoryItems"
+                  Style="width: 100%;" />
 
-        <FluentLabel Typo="Typography.H5">Tags</FluentLabel>
-        <FluentStack Orientation="Orientation.Horizontal" Wrap="true" Style="gap: 0.5rem;">
+        <h5 style="margin: 0;">Tags</h5>
+        <div class="flex flex-row flex-wrap gap-2">
             @foreach (var tag in _allTags)
             {
                 <TagChip Tag="@tag" 
                          IsSelected="@_selectedTagIds.Contains(tag.ID)"
                          OnClick="ToggleTag" />
             }
-        </FluentStack>
+        </div>
 
-        <FluentButton Appearance="Appearance.Accent" 
-                      Style="width: 100%;"
-                      OnClick="SaveProject">
+        <MBButton ButtonStyle="@MBButtonStyle.ContainedRaised" 
+                  Style="width: 100%;"
+                  @onclick="SaveProject">
             Save
-        </FluentButton>
+        </MBButton>
 
         @if (!_isNew)
         {
-            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
-                <FluentLabel Typo="Typography.H5">Tasks</FluentLabel>
-                <FluentSpacer />
+            <div class="flex flex-row items-center">
+                <h5 style="margin: 0;">Tasks</h5>
+                <div style="flex: 1;"></div>
                 @if (_tasks.Any(t => t.IsCompleted))
                 {
-                    <FluentButton Appearance="Appearance.Stealth" 
-                                  IconStart="@(new Icons.Regular.Size20.Delete())"
-                                  OnClick="CleanCompletedTasks">
+                    <MBButton ButtonStyle="@MBButtonStyle.Text" 
+                              LeadingIcon="delete"
+                              @onclick="CleanCompletedTasks">
                         Clean up
-                    </FluentButton>
+                    </MBButton>
                 }
-            </FluentStack>
+            </div>
 
-            <FluentStack Orientation="Orientation.Vertical" Style="gap: 0.5rem;">
+            <div class="flex flex-col gap-2">
                 @foreach (var task in _tasks)
                 {
                     <TaskView Task="@task" 
                               OnCompleted="OnTaskCompleted" 
                               OnClick="NavigateToTask" />
                 }
-            </FluentStack>
+            </div>
         }
-    </FluentStack>
+    </div>
 }
 
 @if (!_isNew)
@@ -100,8 +101,9 @@ else
     
     private string _name = string.Empty;
     private string _description = string.Empty;
-    private Category? _selectedCategory;
+    private string _selectedCategoryId = "";
     private List<Category> _categories = [];
+    private MBSelectElement<string>[] _categoryItems = [];
     private List<Tag> _allTags = [];
     private HashSet<int> _selectedTagIds = [];
     private List<ProjectTask> _tasks = [];
@@ -117,6 +119,7 @@ else
         try
         {
             _categories = await CategoryRepository.ListAsync();
+            _categoryItems = _categories.Select(c => new MBSelectElement<string> { SelectedValue = c.ID.ToString(), Label = c.Title }).ToArray();
             _allTags = await TagRepository.ListAsync();
 
             if (!_isNew)
@@ -126,7 +129,7 @@ else
                 {
                     _name = _project.Name;
                     _description = _project.Description;
-                    _selectedCategory = _categories.FirstOrDefault(c => c.ID == _project.CategoryID);
+                    _selectedCategoryId = _project.CategoryID.ToString();
                     _selectedTagIds = _project.Tags?.Select(t => t.ID).ToHashSet() ?? [];
                     _tasks = _project.Tasks ?? [];
                 }
@@ -155,7 +158,7 @@ else
         var project = _project ?? new Project();
         project.Name = _name;
         project.Description = _description;
-        project.CategoryID = _selectedCategory?.ID ?? 0;
+        project.CategoryID = int.TryParse(_selectedCategoryId, out var catId) ? catId : 0;
 
         await ProjectRepository.SaveItemAsync(project);
 

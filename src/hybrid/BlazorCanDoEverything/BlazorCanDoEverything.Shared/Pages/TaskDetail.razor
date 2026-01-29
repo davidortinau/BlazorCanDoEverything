@@ -5,48 +5,47 @@
 
 <PageTitle>@(_isNew ? "New Task" : "Task")</PageTitle>
 
-<FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="margin-bottom: 1rem;">
-    <FluentButton Appearance="Appearance.Stealth" 
-                  IconStart="@(new Icons.Regular.Size20.ArrowLeft())"
-                  OnClick="GoBack">
+<div class="flex flex-row items-center mb-4">
+    <MBButton ButtonStyle="@MBButtonStyle.Text" 
+              LeadingIcon="arrow_back"
+              @onclick="GoBack">
         Back
-    </FluentButton>
-    <FluentSpacer />
+    </MBButton>
+    <div style="flex: 1;"></div>
     @if (!_isNew)
     {
-        <FluentButton Appearance="Appearance.Outline" 
-                      IconStart="@(new Icons.Regular.Size20.Delete())"
-                      OnClick="DeleteTask">
+        <MBButton ButtonStyle="@MBButtonStyle.Outlined" 
+                  LeadingIcon="delete"
+                  @onclick="DeleteTask">
             Delete
-        </FluentButton>
+        </MBButton>
     }
-</FluentStack>
+</div>
 
 @if (_isLoading)
 {
-    <FluentProgressRing />
+    <MBCircularProgress />
 }
 else
 {
-    <FluentStack Orientation="Orientation.Vertical" Style="gap: 1rem; max-width: 600px;">
-        <FluentTextField @bind-Value="_title" Label="Task" Style="width: 100%;" />
+    <div class="flex flex-col gap-4" style="max-width: 600px;">
+        <MBTextField @bind-Value="_title" 
+                     Label="Task" 
+                     Style="width: 100%;" />
         
-        <FluentCheckbox @bind-Value="_isCompleted" Label="Completed" />
+        <MBCheckbox @bind-Value="_isCompleted" Label="Completed" />
 
-        <FluentSelect TOption="Project"
-                      Label="Project"
-                      Items="@_projects"
-                      OptionText="@(p => p.Name)"
-                      OptionValue="@(p => p.ID.ToString())"
-                      @bind-SelectedOption="_selectedProject"
-                      Style="width: 100%;" />
+        <MBSelect @bind-Value="_selectedProjectId"
+                  Label="Project"
+                  Items="@_projectItems"
+                  Style="width: 100%;" />
 
-        <FluentButton Appearance="Appearance.Accent" 
-                      Style="width: 100%;"
-                      OnClick="SaveTask">
+        <MBButton ButtonStyle="@MBButtonStyle.ContainedRaised" 
+                  Style="width: 100%;"
+                  @onclick="SaveTask">
             Save
-        </FluentButton>
-    </FluentStack>
+        </MBButton>
+    </div>
 }
 
 @code {
@@ -61,8 +60,9 @@ else
     
     private string _title = string.Empty;
     private bool _isCompleted;
-    private Project? _selectedProject;
+    private string _selectedProjectId = "";
     private List<Project> _projects = [];
+    private MBSelectElement<string>[] _projectItems = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,6 +75,7 @@ else
         try
         {
             _projects = await ProjectRepository.ListAsync();
+            _projectItems = _projects.Select(p => new MBSelectElement<string> { SelectedValue = p.ID.ToString(), Label = p.Name }).ToArray();
 
             if (!_isNew)
             {
@@ -83,16 +84,16 @@ else
                 {
                     _title = _task.Title;
                     _isCompleted = _task.IsCompleted;
-                    _selectedProject = _projects.FirstOrDefault(p => p.ID == _task.ProjectID);
+                    _selectedProjectId = _task.ProjectID.ToString();
                 }
             }
             else if (ProjectIdFromQuery.HasValue)
             {
-                _selectedProject = _projects.FirstOrDefault(p => p.ID == ProjectIdFromQuery.Value);
+                _selectedProjectId = ProjectIdFromQuery.Value.ToString();
             }
             else if (_projects.Any())
             {
-                _selectedProject = _projects.First();
+                _selectedProjectId = _projects.First().ID.ToString();
             }
         }
         finally
@@ -106,7 +107,7 @@ else
         var task = _task ?? new ProjectTask();
         task.Title = _title;
         task.IsCompleted = _isCompleted;
-        task.ProjectID = _selectedProject?.ID ?? 0;
+        task.ProjectID = int.TryParse(_selectedProjectId, out var projId) ? projId : 0;
 
         await TaskRepository.SaveItemAsync(task);
         GoBack();

@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     <ResourcePreloader />
-    <link rel="stylesheet" href="_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet" />
+    <link href="_content/Material.Blazor/material.blazor.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="_content/BlazorCanDoEverything.Shared/app.css" />
+    <link rel="stylesheet" href="_content/BlazorCanDoEverything.Shared/material-theme.css" />
     <link rel="stylesheet" href="BlazorCanDoEverything.Web.styles.css" />
     <ImportMap />
     <link rel="icon" type="image/png" href="_content/BlazorCanDoEverything.Shared/favicon.png" />
@@ -17,6 +19,7 @@
 <body>
     <Routes @rendermode="InteractiveServer" />
     <ReconnectModal />
+    <script src="_content/Material.Blazor/material.blazor.min.js"></script>
     <script src="@Assets["_framework/blazor.web.js"]"></script>
 </body>
 

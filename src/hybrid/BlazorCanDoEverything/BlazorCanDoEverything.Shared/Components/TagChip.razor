@@ -1,9 +1,8 @@
-<FluentBadge Fill="@(IsSelected ? "highlight" : null)"
-             Appearance="@(IsSelected ? Appearance.Neutral : Appearance.Neutral)"
-             Style="@GetStyle()"
-             @onclick="OnChipClick">
+<span class="chip @(IsSelected ? "selected" : "")" 
+      style="@GetStyle()"
+      @onclick="OnChipClick">
     @Tag.Title
-</FluentBadge>
+</span>
 
 @code {
     [Parameter, EditorRequired] public Tag Tag { get; set; } = default!;
@@ -12,12 +11,12 @@
 
     private string GetStyle()
     {
-        var baseStyle = "cursor: pointer; padding: 0.25rem 0.5rem;";
+        var baseStyle = "cursor: pointer; padding: 0.25rem 0.75rem; border-radius: 16px; font-size: 0.875rem; display: inline-block;";
         if (IsSelected)
         {
-            return $"--badge-fill-highlight: {Tag.Color}; --badge-color-highlight: white; {baseStyle}";
+            return $"background-color: {Tag.Color}; color: white; {baseStyle}";
         }
-        return baseStyle;
+        return $"background-color: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-surface-variant); {baseStyle}";
     }
 
     private async Task OnChipClick()

@@ -1,32 +1,22 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JS
 
-<FluentDesignTheme @bind-Mode="@_themeMode" StorageName="todo-app-theme" />
+<div class="app-layout @(_isDarkMode ? "dark-theme" : "")" data-theme="@(_isDarkMode ? "dark" : "light")">
+    <header class="app-header">
+        <span class="material-icons">task_alt</span>
+        <h1>Todo App</h1>
+        <div style="flex: 1;"></div>
+        <MBIconButton Icon="@(_isDarkMode ? "light_mode" : "dark_mode")" 
+                      @onclick="ToggleTheme" />
+    </header>
 
-<FluentLayout>
-    <FluentHeader>
-        <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
-            <FluentIcon Value="@(new Icons.Regular.Size24.TaskListSquareLtr())" Color="Color.Accent" />
-            <FluentLabel Typo="Typography.H4" MarginBlock="0" Style="color: white;">Todo App</FluentLabel>
-        </FluentStack>
-        <FluentSpacer />
-        <FluentButton IconStart="@(_themeMode == DesignThemeModes.Dark ? new Icons.Regular.Size20.WeatherSunny() : new Icons.Regular.Size20.WeatherMoon())" 
-                      Appearance="Appearance.Stealth"
-                      OnClick="@ToggleTheme"
-                      Title="@(_themeMode == DesignThemeModes.Dark ? "Switch to light mode" : "Switch to dark mode")" />
-    </FluentHeader>
-
-    <FluentStack Class="main-layout" Orientation="Orientation.Horizontal" Width="100%">
+    <div class="app-main">
         <NavMenu />
-        <FluentBodyContent Class="content-area">
-            <div style="padding: 1rem 1.5rem;">
-                @Body
-            </div>
-        </FluentBodyContent>
-    </FluentStack>
-</FluentLayout>
-
-<FluentToastProvider />
-<FluentDialogProvider />
+        <main class="app-content">
+            @Body
+        </main>
+    </div>
+</div>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
@@ -35,12 +25,24 @@
 </div>
 
 @code {
-    private DesignThemeModes _themeMode = DesignThemeModes.System;
+    private bool _isDarkMode = false;
 
-    private void ToggleTheme()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _themeMode = _themeMode == DesignThemeModes.Dark 
-            ? DesignThemeModes.Light 
-            : DesignThemeModes.Dark;
+        if (firstRender)
+        {
+            var storedTheme = await JS.InvokeAsync<string>("localStorage.getItem", "todo-app-theme");
+            if (!string.IsNullOrEmpty(storedTheme))
+            {
+                _isDarkMode = storedTheme == "dark";
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task ToggleTheme()
+    {
+        _isDarkMode = !_isDarkMode;
+        await JS.InvokeVoidAsync("localStorage.setItem", "todo-app-theme", _isDarkMode ? "dark" : "light");
     }
 }

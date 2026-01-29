@@ -1,16 +1,14 @@
-<FluentCard Style="padding: 0.75rem;">
-    <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
-        <FluentCheckbox @bind-Value="@Task.IsCompleted" 
-                        @bind-Value:after="OnCompletedChanged"
-                        Style="margin-right: 0.5rem;" />
-        <FluentStack Orientation="Orientation.Vertical" VerticalAlignment="VerticalAlignment.Center" Style="flex: 1; cursor: pointer;" @onclick="OnTaskClick">
-            <FluentLabel Typo="Typography.Body" 
-                         Style="@(Task.IsCompleted ? "text-decoration: line-through; opacity: 0.6;" : "")">
+<div class="card" style="padding: 0.75rem;">
+    <div class="flex flex-row items-center gap-2">
+        <MBCheckbox @bind-Value="@Task.IsCompleted" 
+                    @bind-Value:after="OnCompletedChanged" />
+        <div class="flex flex-col flex-1" style="cursor: pointer;" @onclick="OnTaskClick">
+            <span style="@(Task.IsCompleted ? "text-decoration: line-through; opacity: 0.6;" : "")">
                 @Task.Title
-            </FluentLabel>
-        </FluentStack>
-    </FluentStack>
-</FluentCard>
+            </span>
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter, EditorRequired] public ProjectTask Task { get; set; } = default!;

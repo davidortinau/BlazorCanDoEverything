@@ -1,0 +1,26 @@
+@inject NavigationManager Navigation
+
+<FluentButton Appearance="Appearance.Accent"
+              IconStart="@(new Icons.Regular.Size24.Add())"
+              Style="position: fixed; bottom: 2rem; right: 2rem; border-radius: 50%; width: 56px; height: 56px; z-index: 100;"
+              Title="@Title"
+              OnClick="@OnClick">
+</FluentButton>
+
+@code {
+    [Parameter] public string Title { get; set; } = "Add";
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter] public string? NavigateTo { get; set; }
+
+    private async Task HandleClick()
+    {
+        if (OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync();
+        }
+        else if (!string.IsNullOrEmpty(NavigateTo))
+        {
+            Navigation.NavigateTo(NavigateTo);
+        }
+    }
+}

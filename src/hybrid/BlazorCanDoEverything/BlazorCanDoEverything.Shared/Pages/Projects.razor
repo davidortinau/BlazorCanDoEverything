@@ -1,0 +1,59 @@
+@page "/projects"
+@inject IProjectRepository ProjectRepository
+@inject NavigationManager Navigation
+
+<PageTitle>Projects</PageTitle>
+
+<FluentLabel Typo="Typography.H3" Style="margin-bottom: 1rem;">Projects</FluentLabel>
+
+@if (_isLoading)
+{
+    <FluentProgressRing />
+}
+else
+{
+    <FluentStack Orientation="Orientation.Vertical" Style="gap: 0.75rem;">
+        @foreach (var project in _projects)
+        {
+            <FluentCard Style="cursor: pointer;" @onclick="() => NavigateToProject(project)">
+                <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
+                    <FluentStack Orientation="Orientation.Vertical" Style="flex: 1;">
+                        <FluentLabel Typo="Typography.H5">@project.Name</FluentLabel>
+                        <FluentLabel Typo="Typography.Body" Style="opacity: 0.7;">@project.Description</FluentLabel>
+                    </FluentStack>
+                    <FluentBadge>@(project.Tasks?.Count ?? 0) tasks</FluentBadge>
+                </FluentStack>
+            </FluentCard>
+        }
+    </FluentStack>
+}
+
+<AddButton Title="Add Project" OnClick="@(() => Navigation.NavigateTo("/project/0"))" />
+
+@code {
+    private bool _isLoading = true;
+    private List<Project> _projects = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _isLoading = true;
+        try
+        {
+            _projects = await ProjectRepository.ListAsync();
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void NavigateToProject(Project project)
+    {
+        Navigation.NavigateTo($"/project/{project.ID}");
+    }
+}

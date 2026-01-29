@@ -1,0 +1,29 @@
+<FluentCard Style="padding: 0.75rem;">
+    <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
+        <FluentCheckbox @bind-Value="@Task.IsCompleted" 
+                        @bind-Value:after="OnCompletedChanged"
+                        Style="margin-right: 0.5rem;" />
+        <FluentStack Orientation="Orientation.Vertical" VerticalAlignment="VerticalAlignment.Center" Style="flex: 1; cursor: pointer;" @onclick="OnTaskClick">
+            <FluentLabel Typo="Typography.Body" 
+                         Style="@(Task.IsCompleted ? "text-decoration: line-through; opacity: 0.6;" : "")">
+                @Task.Title
+            </FluentLabel>
+        </FluentStack>
+    </FluentStack>
+</FluentCard>
+
+@code {
+    [Parameter, EditorRequired] public ProjectTask Task { get; set; } = default!;
+    [Parameter] public EventCallback<ProjectTask> OnCompleted { get; set; }
+    [Parameter] public EventCallback<ProjectTask> OnClick { get; set; }
+
+    private async Task OnCompletedChanged()
+    {
+        await OnCompleted.InvokeAsync(Task);
+    }
+
+    private async Task OnTaskClick()
+    {
+        await OnClick.InvokeAsync(Task);
+    }
+}

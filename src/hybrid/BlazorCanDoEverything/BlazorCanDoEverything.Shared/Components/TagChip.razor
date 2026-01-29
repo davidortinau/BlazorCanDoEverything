@@ -1,0 +1,25 @@
+<FluentBadge Appearance="@(IsSelected ? Appearance.Accent : Appearance.Neutral)"
+             Style="@GetStyle()"
+             @onclick="OnChipClick">
+    @Tag.Title
+</FluentBadge>
+
+@code {
+    [Parameter, EditorRequired] public Tag Tag { get; set; } = default!;
+    [Parameter] public bool IsSelected { get; set; }
+    [Parameter] public EventCallback<Tag> OnClick { get; set; }
+
+    private string GetStyle()
+    {
+        if (IsSelected)
+        {
+            return $"background-color: {Tag.Color}; cursor: pointer; padding: 0.25rem 0.5rem;";
+        }
+        return "cursor: pointer; padding: 0.25rem 0.5rem;";
+    }
+
+    private async Task OnChipClick()
+    {
+        await OnClick.InvokeAsync(Tag);
+    }
+}

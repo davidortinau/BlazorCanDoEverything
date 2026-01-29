@@ -1,0 +1,128 @@
+@page "/task/{Id:int}"
+@inject ITaskRepository TaskRepository
+@inject IProjectRepository ProjectRepository
+@inject NavigationManager Navigation
+
+<PageTitle>@(_isNew ? "New Task" : "Task")</PageTitle>
+
+<FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="margin-bottom: 1rem;">
+    <FluentButton Appearance="Appearance.Stealth" 
+                  IconStart="@(new Icons.Regular.Size20.ArrowLeft())"
+                  OnClick="GoBack">
+        Back
+    </FluentButton>
+    <FluentSpacer />
+    @if (!_isNew)
+    {
+        <FluentButton Appearance="Appearance.Outline" 
+                      IconStart="@(new Icons.Regular.Size20.Delete())"
+                      OnClick="DeleteTask">
+            Delete
+        </FluentButton>
+    }
+</FluentStack>
+
+@if (_isLoading)
+{
+    <FluentProgressRing />
+}
+else
+{
+    <FluentStack Orientation="Orientation.Vertical" Style="gap: 1rem; max-width: 600px;">
+        <FluentTextField @bind-Value="_title" Label="Task" Style="width: 100%;" />
+        
+        <FluentCheckbox @bind-Value="_isCompleted" Label="Completed" />
+
+        <FluentSelect TOption="Project"
+                      Label="Project"
+                      Items="@_projects"
+                      OptionText="@(p => p.Name)"
+                      OptionValue="@(p => p.ID.ToString())"
+                      @bind-SelectedOption="_selectedProject"
+                      Style="width: 100%;" />
+
+        <FluentButton Appearance="Appearance.Accent" 
+                      Style="width: 100%;"
+                      OnClick="SaveTask">
+            Save
+        </FluentButton>
+    </FluentStack>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    
+    [SupplyParameterFromQuery(Name = "projectId")]
+    public int? ProjectIdFromQuery { get; set; }
+
+    private bool _isLoading = true;
+    private bool _isNew => Id == 0;
+    private ProjectTask? _task;
+    
+    private string _title = string.Empty;
+    private bool _isCompleted;
+    private Project? _selectedProject;
+    private List<Project> _projects = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _isLoading = true;
+        try
+        {
+            _projects = await ProjectRepository.ListAsync();
+
+            if (!_isNew)
+            {
+                _task = await TaskRepository.GetAsync(Id);
+                if (_task != null)
+                {
+                    _title = _task.Title;
+                    _isCompleted = _task.IsCompleted;
+                    _selectedProject = _projects.FirstOrDefault(p => p.ID == _task.ProjectID);
+                }
+            }
+            else if (ProjectIdFromQuery.HasValue)
+            {
+                _selectedProject = _projects.FirstOrDefault(p => p.ID == ProjectIdFromQuery.Value);
+            }
+            else if (_projects.Any())
+            {
+                _selectedProject = _projects.First();
+            }
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task SaveTask()
+    {
+        var task = _task ?? new ProjectTask();
+        task.Title = _title;
+        task.IsCompleted = _isCompleted;
+        task.ProjectID = _selectedProject?.ID ?? 0;
+
+        await TaskRepository.SaveItemAsync(task);
+        GoBack();
+    }
+
+    private async Task DeleteTask()
+    {
+        if (_task != null)
+        {
+            await TaskRepository.DeleteItemAsync(_task);
+            GoBack();
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

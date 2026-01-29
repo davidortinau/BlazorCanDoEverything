@@ -1,0 +1,32 @@
+<FluentCard Style="width: 200px; min-height: 150px; cursor: pointer;" @onclick="OnCardClick">
+    <FluentStack Orientation="Orientation.Vertical">
+        <FluentLabel Typo="Typography.H5">@Project.Name</FluentLabel>
+        <FluentLabel Typo="Typography.Body" Style="opacity: 0.7;">@Project.Description</FluentLabel>
+        <FluentSpacer />
+        <FluentStack Orientation="Orientation.Horizontal" Wrap="true">
+            @if (Project.Tags != null)
+            {
+                @foreach (var tag in Project.Tags.Take(3))
+                {
+                    <FluentBadge Appearance="Appearance.Accent" 
+                                 Style="@($"background-color: {tag.Color}; margin: 2px;")">
+                        @tag.Title
+                    </FluentBadge>
+                }
+            }
+        </FluentStack>
+        <FluentLabel Typo="Typography.Body" Style="font-size: 0.75rem; opacity: 0.6;">
+            @(Project.Tasks?.Count ?? 0) tasks
+        </FluentLabel>
+    </FluentStack>
+</FluentCard>
+
+@code {
+    [Parameter, EditorRequired] public Project Project { get; set; } = default!;
+    [Parameter] public EventCallback<Project> OnClick { get; set; }
+
+    private async Task OnCardClick()
+    {
+        await OnClick.InvokeAsync(Project);
+    }
+}

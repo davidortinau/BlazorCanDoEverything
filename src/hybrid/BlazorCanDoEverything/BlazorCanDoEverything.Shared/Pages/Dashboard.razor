@@ -1,0 +1,130 @@
+@page "/"
+@inject IProjectRepository ProjectRepository
+@inject ITaskRepository TaskRepository
+@inject ICategoryRepository CategoryRepository
+@inject SeedDataService SeedDataService
+@inject NavigationManager Navigation
+
+<PageTitle>Dashboard</PageTitle>
+
+<FluentLabel Typo="Typography.H3" Style="margin-bottom: 1rem;">@Today</FluentLabel>
+
+@if (_isLoading)
+{
+    <FluentProgressRing />
+}
+else
+{
+    <CategoryChart Data="@_categoryData" Colors="@_categoryColors" />
+
+    <FluentLabel Typo="Typography.H4" Style="margin: 1rem 0;">Projects</FluentLabel>
+    
+    <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; margin-bottom: 1rem;">
+        @foreach (var project in _projects)
+        {
+            <ProjectCard Project="@project" OnClick="NavigateToProject" />
+        }
+    </div>
+
+    <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="margin-bottom: 1rem;">
+        <FluentLabel Typo="Typography.H4">Tasks</FluentLabel>
+        <FluentSpacer />
+        @if (_tasks.Any(t => t.IsCompleted))
+        {
+            <FluentButton Appearance="Appearance.Stealth" 
+                          IconStart="@(new Icons.Regular.Size20.Delete())"
+                          OnClick="CleanCompletedTasks">
+                Clean up
+            </FluentButton>
+        }
+    </FluentStack>
+
+    <FluentStack Orientation="Orientation.Vertical" Style="gap: 0.5rem;">
+        @foreach (var task in _tasks)
+        {
+            <TaskView Task="@task" 
+                      OnCompleted="OnTaskCompleted" 
+                      OnClick="NavigateToTask" />
+        }
+    </FluentStack>
+}
+
+<AddButton Title="Add Task" OnClick="@(() => Navigation.NavigateTo("/task/0"))" />
+
+@code {
+    private bool _isLoading = true;
+    private bool _isSeeded;
+    private List<Project> _projects = [];
+    private List<ProjectTask> _tasks = [];
+    private List<CategoryChartData> _categoryData = [];
+    private List<string> _categoryColors = [];
+    
+    private string Today => DateTime.Now.ToString("dddd, MMM d");
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _isLoading = true;
+        
+        try
+        {
+            // Check if we need to seed data
+            var existingProjects = await ProjectRepository.ListAsync();
+            if (!existingProjects.Any())
+            {
+                await SeedDataService.LoadSeedDataAsync();
+            }
+
+            _projects = await ProjectRepository.ListAsync();
+            _tasks = await TaskRepository.ListAsync();
+            
+            // Build category chart data
+            var categories = await CategoryRepository.ListAsync();
+            _categoryData = [];
+            _categoryColors = [];
+            
+            foreach (var category in categories)
+            {
+                var projectsInCategory = _projects.Where(p => p.CategoryID == category.ID).ToList();
+                var taskCount = projectsInCategory.SelectMany(p => p.Tasks).Count();
+                _categoryData.Add(new CategoryChartData(category.Title, taskCount));
+                _categoryColors.Add(category.Color);
+            }
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task OnTaskCompleted(ProjectTask task)
+    {
+        await TaskRepository.SaveItemAsync(task);
+        StateHasChanged();
+    }
+
+    private void NavigateToProject(Project project)
+    {
+        Navigation.NavigateTo($"/project/{project.ID}");
+    }
+
+    private void NavigateToTask(ProjectTask task)
+    {
+        Navigation.NavigateTo($"/task/{task.ID}");
+    }
+
+    private async Task CleanCompletedTasks()
+    {
+        var completedTasks = _tasks.Where(t => t.IsCompleted).ToList();
+        foreach (var task in completedTasks)
+        {
+            await TaskRepository.DeleteItemAsync(task);
+            _tasks.Remove(task);
+        }
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,207 @@
+@page "/project/{Id:int}"
+@inject IProjectRepository ProjectRepository
+@inject ITaskRepository TaskRepository
+@inject ICategoryRepository CategoryRepository
+@inject ITagRepository TagRepository
+@inject NavigationManager Navigation
+
+<PageTitle>@(_isNew ? "New Project" : "Project")</PageTitle>
+
+<FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="margin-bottom: 1rem;">
+    <FluentButton Appearance="Appearance.Stealth" 
+                  IconStart="@(new Icons.Regular.Size20.ArrowLeft())"
+                  OnClick="GoBack">
+        Back
+    </FluentButton>
+    <FluentSpacer />
+    @if (!_isNew)
+    {
+        <FluentButton Appearance="Appearance.Outline" 
+                      IconStart="@(new Icons.Regular.Size20.Delete())"
+                      OnClick="DeleteProject">
+            Delete
+        </FluentButton>
+    }
+</FluentStack>
+
+@if (_isLoading)
+{
+    <FluentProgressRing />
+}
+else
+{
+    <FluentStack Orientation="Orientation.Vertical" Style="gap: 1rem; max-width: 600px;">
+        <FluentTextField @bind-Value="_name" Label="Name" Style="width: 100%;" />
+        
+        <FluentTextField @bind-Value="_description" Label="Description" Style="width: 100%;" />
+
+        <FluentSelect TOption="Category"
+                      Label="Category"
+                      Items="@_categories"
+                      OptionText="@(c => c.Title)"
+                      OptionValue="@(c => c.ID.ToString())"
+                      @bind-SelectedOption="_selectedCategory"
+                      Style="width: 100%;" />
+
+        <FluentLabel Typo="Typography.H5">Tags</FluentLabel>
+        <FluentStack Orientation="Orientation.Horizontal" Wrap="true" Style="gap: 0.5rem;">
+            @foreach (var tag in _allTags)
+            {
+                <TagChip Tag="@tag" 
+                         IsSelected="@_selectedTagIds.Contains(tag.ID)"
+                         OnClick="ToggleTag" />
+            }
+        </FluentStack>
+
+        <FluentButton Appearance="Appearance.Accent" 
+                      Style="width: 100%;"
+                      OnClick="SaveProject">
+            Save
+        </FluentButton>
+
+        @if (!_isNew)
+        {
+            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
+                <FluentLabel Typo="Typography.H5">Tasks</FluentLabel>
+                <FluentSpacer />
+                @if (_tasks.Any(t => t.IsCompleted))
+                {
+                    <FluentButton Appearance="Appearance.Stealth" 
+                                  IconStart="@(new Icons.Regular.Size20.Delete())"
+                                  OnClick="CleanCompletedTasks">
+                        Clean up
+                    </FluentButton>
+                }
+            </FluentStack>
+
+            <FluentStack Orientation="Orientation.Vertical" Style="gap: 0.5rem;">
+                @foreach (var task in _tasks)
+                {
+                    <TaskView Task="@task" 
+                              OnCompleted="OnTaskCompleted" 
+                              OnClick="NavigateToTask" />
+                }
+            </FluentStack>
+        }
+    </FluentStack>
+}
+
+@if (!_isNew)
+{
+    <AddButton Title="Add Task" OnClick="@(() => Navigation.NavigateTo($"/task/0?projectId={Id}"))" />
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private bool _isLoading = true;
+    private bool _isNew => Id == 0;
+    private Project? _project;
+    
+    private string _name = string.Empty;
+    private string _description = string.Empty;
+    private Category? _selectedCategory;
+    private List<Category> _categories = [];
+    private List<Tag> _allTags = [];
+    private HashSet<int> _selectedTagIds = [];
+    private List<ProjectTask> _tasks = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _isLoading = true;
+        try
+        {
+            _categories = await CategoryRepository.ListAsync();
+            _allTags = await TagRepository.ListAsync();
+
+            if (!_isNew)
+            {
+                _project = await ProjectRepository.GetAsync(Id);
+                if (_project != null)
+                {
+                    _name = _project.Name;
+                    _description = _project.Description;
+                    _selectedCategory = _categories.FirstOrDefault(c => c.ID == _project.CategoryID);
+                    _selectedTagIds = _project.Tags?.Select(t => t.ID).ToHashSet() ?? [];
+                    _tasks = _project.Tasks ?? [];
+                }
+            }
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void ToggleTag(Tag tag)
+    {
+        if (_selectedTagIds.Contains(tag.ID))
+        {
+            _selectedTagIds.Remove(tag.ID);
+        }
+        else
+        {
+            _selectedTagIds.Add(tag.ID);
+        }
+    }
+
+    private async Task SaveProject()
+    {
+        var project = _project ?? new Project();
+        project.Name = _name;
+        project.Description = _description;
+        project.CategoryID = _selectedCategory?.ID ?? 0;
+
+        await ProjectRepository.SaveItemAsync(project);
+
+        // Save tag associations
+        foreach (var tagId in _selectedTagIds)
+        {
+            var tag = _allTags.First(t => t.ID == tagId);
+            await TagRepository.SaveItemAsync(tag, project.ID);
+        }
+
+        Navigation.NavigateTo("/projects");
+    }
+
+    private async Task DeleteProject()
+    {
+        if (_project != null)
+        {
+            await ProjectRepository.DeleteItemAsync(_project);
+            Navigation.NavigateTo("/projects");
+        }
+    }
+
+    private async Task OnTaskCompleted(ProjectTask task)
+    {
+        await TaskRepository.SaveItemAsync(task);
+        StateHasChanged();
+    }
+
+    private void NavigateToTask(ProjectTask task)
+    {
+        Navigation.NavigateTo($"/task/{task.ID}");
+    }
+
+    private async Task CleanCompletedTasks()
+    {
+        var completedTasks = _tasks.Where(t => t.IsCompleted).ToList();
+        foreach (var task in completedTasks)
+        {
+            await TaskRepository.DeleteItemAsync(task);
+            _tasks.Remove(task);
+        }
+        StateHasChanged();
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/projects");
+    }
+}

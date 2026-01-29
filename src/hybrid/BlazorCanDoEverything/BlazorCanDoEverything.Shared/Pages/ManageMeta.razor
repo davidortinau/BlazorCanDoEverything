@@ -1,0 +1,141 @@
+@page "/manage"
+@inject ICategoryRepository CategoryRepository
+@inject ITagRepository TagRepository
+
+<PageTitle>Manage Meta</PageTitle>
+
+<FluentLabel Typo="Typography.H3" Style="margin-bottom: 1rem;">Categories and Tags</FluentLabel>
+
+@if (_isLoading)
+{
+    <FluentProgressRing />
+}
+else
+{
+    <FluentLabel Typo="Typography.H4" Style="margin-bottom: 0.5rem;">Categories</FluentLabel>
+    
+    <FluentStack Orientation="Orientation.Vertical" Style="gap: 0.5rem; margin-bottom: 1rem;">
+        @foreach (var category in _categories)
+        {
+            <FluentCard>
+                <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="gap: 0.5rem;">
+                    <FluentTextField @bind-Value="category.Title" Style="flex: 2;" />
+                    <FluentTextField @bind-Value="category.Color" Style="flex: 1;" />
+                    <div style="width: 30px; height: 30px; background-color: @category.Color; border-radius: 4px;"></div>
+                    <FluentButton Appearance="Appearance.Stealth"
+                                  IconStart="@(new Icons.Regular.Size20.Delete())"
+                                  OnClick="@(() => DeleteCategory(category))" />
+                </FluentStack>
+            </FluentCard>
+        }
+    </FluentStack>
+
+    <FluentStack Orientation="Orientation.Horizontal" Style="gap: 0.5rem; margin-bottom: 2rem;">
+        <FluentButton Appearance="Appearance.Accent" OnClick="SaveCategories" Style="flex: 1;">
+            Save Categories
+        </FluentButton>
+        <FluentButton Appearance="Appearance.Outline" 
+                      IconStart="@(new Icons.Regular.Size20.Add())"
+                      OnClick="AddCategory">
+            Add
+        </FluentButton>
+    </FluentStack>
+
+    <FluentLabel Typo="Typography.H4" Style="margin-bottom: 0.5rem;">Tags</FluentLabel>
+    
+    <FluentStack Orientation="Orientation.Vertical" Style="gap: 0.5rem; margin-bottom: 1rem;">
+        @foreach (var tag in _tags)
+        {
+            <FluentCard>
+                <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="gap: 0.5rem;">
+                    <FluentTextField @bind-Value="tag.Title" Style="flex: 2;" />
+                    <FluentTextField @bind-Value="tag.Color" Style="flex: 1;" />
+                    <div style="width: 30px; height: 30px; background-color: @tag.Color; border-radius: 4px;"></div>
+                    <FluentButton Appearance="Appearance.Stealth"
+                                  IconStart="@(new Icons.Regular.Size20.Delete())"
+                                  OnClick="@(() => DeleteTag(tag))" />
+                </FluentStack>
+            </FluentCard>
+        }
+    </FluentStack>
+
+    <FluentStack Orientation="Orientation.Horizontal" Style="gap: 0.5rem;">
+        <FluentButton Appearance="Appearance.Accent" OnClick="SaveTags" Style="flex: 1;">
+            Save Tags
+        </FluentButton>
+        <FluentButton Appearance="Appearance.Outline" 
+                      IconStart="@(new Icons.Regular.Size20.Add())"
+                      OnClick="AddTag">
+            Add
+        </FluentButton>
+    </FluentStack>
+}
+
+@code {
+    private bool _isLoading = true;
+    private List<Category> _categories = [];
+    private List<Tag> _tags = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _isLoading = true;
+        try
+        {
+            _categories = await CategoryRepository.ListAsync();
+            _tags = await TagRepository.ListAsync();
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private void AddCategory()
+    {
+        _categories.Add(new Category { Title = "New Category", Color = "#808080" });
+    }
+
+    private async Task SaveCategories()
+    {
+        foreach (var category in _categories)
+        {
+            await CategoryRepository.SaveItemAsync(category);
+        }
+    }
+
+    private async Task DeleteCategory(Category category)
+    {
+        if (category.ID > 0)
+        {
+            await CategoryRepository.DeleteItemAsync(category);
+        }
+        _categories.Remove(category);
+    }
+
+    private void AddTag()
+    {
+        _tags.Add(new Tag { Title = "New Tag", Color = "#808080" });
+    }
+
+    private async Task SaveTags()
+    {
+        foreach (var tag in _tags)
+        {
+            await TagRepository.SaveItemAsync(tag);
+        }
+    }
+
+    private async Task DeleteTag(Tag tag)
+    {
+        if (tag.ID > 0)
+        {
+            await TagRepository.DeleteItemAsync(tag);
+        }
+        _tags.Remove(tag);
+    }
+}

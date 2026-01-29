@@ -1,0 +1,53 @@
+<FluentCard Style="padding: 1rem; margin-bottom: 1rem;">
+    <FluentLabel Typo="Typography.H5" Style="margin-bottom: 1rem;">Task Categories</FluentLabel>
+    
+    @if (Data != null && Data.Any())
+    {
+        <FluentStack Orientation="Orientation.Vertical" Style="gap: 0.5rem;">
+            @foreach (var item in Data)
+            {
+                var color = GetColorForCategory(item.Title);
+                var percentage = TotalCount > 0 ? (item.Count * 100.0 / TotalCount) : 0;
+                
+                <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Style="width: 100%;">
+                    <FluentLabel Style="width: 120px;">@item.Title</FluentLabel>
+                    <div style="flex: 1; background-color: var(--neutral-layer-3); border-radius: 4px; height: 24px; overflow: hidden;">
+                        <div style="width: @(percentage)%; background-color: @color; height: 100%; transition: width 0.3s;"></div>
+                    </div>
+                    <FluentLabel Style="width: 40px; text-align: right;">@item.Count</FluentLabel>
+                </FluentStack>
+            }
+        </FluentStack>
+    }
+    else
+    {
+        <FluentLabel>No data available</FluentLabel>
+    }
+</FluentCard>
+
+@code {
+    [Parameter] public List<CategoryChartData>? Data { get; set; }
+    [Parameter] public List<string>? Colors { get; set; }
+
+    private int TotalCount => Data?.Sum(d => d.Count) ?? 0;
+
+    private static readonly string[] DefaultColors = 
+    [
+        "#3068df", "#8800FF", "#FF3300", "#FF9900", "#32CD32", "#FF69B4"
+    ];
+
+    private string GetColorForCategory(string title)
+    {
+        if (Colors != null && Data != null)
+        {
+            var index = Data.FindIndex(d => d.Title == title);
+            if (index >= 0 && index < Colors.Count)
+            {
+                return Colors[index];
+            }
+        }
+        
+        var hash = Math.Abs(title.GetHashCode());
+        return DefaultColors[hash % DefaultColors.Length];
+    }
+}

@@ -1,6 +1,7 @@
 @page "/manage"
 @inject ICategoryRepository CategoryRepository
 @inject ITagRepository TagRepository
+@inject IMBToastService ToastService
 
 <PageTitle>Manage Meta</PageTitle>
 
@@ -88,6 +89,7 @@ else
     private void AddCategory()
     {
         _categories.Add(new Category { Title = "New Category", Color = "#808080" });
+        ToastService.ShowToast(MBToastLevel.Info, "Category added");
     }
 
     private async Task SaveCategories()
@@ -96,6 +98,7 @@ else
         {
             await CategoryRepository.SaveItemAsync(category);
         }
+        ToastService.ShowToast(MBToastLevel.Success, "Categories saved");
     }
 
     private async Task DeleteCategory(Category category)
@@ -105,11 +108,13 @@ else
             await CategoryRepository.DeleteItemAsync(category);
         }
         _categories.Remove(category);
+        ToastService.ShowToast(MBToastLevel.Success, "Category deleted");
     }
 
     private void AddTag()
     {
         _tags.Add(new Tag { Title = "New Tag", Color = "#808080" });
+        ToastService.ShowToast(MBToastLevel.Info, "Tag added");
     }
 
     private async Task SaveTags()
@@ -118,6 +123,7 @@ else
         {
             await TagRepository.SaveItemAsync(tag);
         }
+        ToastService.ShowToast(MBToastLevel.Success, "Tags saved");
     }
 
     private async Task DeleteTag(Tag tag)
@@ -127,5 +133,6 @@ else
             await TagRepository.DeleteItemAsync(tag);
         }
         _tags.Remove(tag);
+        ToastService.ShowToast(MBToastLevel.Success, "Tag deleted");
     }
 }

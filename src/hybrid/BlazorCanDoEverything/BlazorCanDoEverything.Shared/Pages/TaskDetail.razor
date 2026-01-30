@@ -2,6 +2,7 @@
 @inject ITaskRepository TaskRepository
 @inject IProjectRepository ProjectRepository
 @inject NavigationManager Navigation
+@inject IMBToastService ToastService
 
 <PageTitle>@(_isNew ? "New Task" : "Task")</PageTitle>
 
@@ -119,6 +120,7 @@ else
         task.ProjectID = int.TryParse(_selectedProjectId, out var projId) ? projId : 0;
 
         await TaskRepository.SaveItemAsync(task);
+        ToastService.ShowToast(MBToastLevel.Success, "Task saved");
         GoBack();
     }
 
@@ -127,6 +129,7 @@ else
         if (_task != null)
         {
             await TaskRepository.DeleteItemAsync(_task);
+            ToastService.ShowToast(MBToastLevel.Success, "Task deleted");
             GoBack();
         }
     }

@@ -4,6 +4,7 @@
 @inject ICategoryRepository CategoryRepository
 @inject ITagRepository TagRepository
 @inject NavigationManager Navigation
+@inject IMBToastService ToastService
 
 <PageTitle>@(_isNew ? "New Project" : "Project")</PageTitle>
 
@@ -182,6 +183,7 @@ else
             await TagRepository.SaveItemAsync(tag, project.ID);
         }
 
+        ToastService.ShowToast(MBToastLevel.Success, "Project saved");
         Navigation.NavigateTo("/projects");
     }
 
@@ -190,6 +192,7 @@ else
         if (_project != null)
         {
             await ProjectRepository.DeleteItemAsync(_project);
+            ToastService.ShowToast(MBToastLevel.Success, "Project deleted");
             Navigation.NavigateTo("/projects");
         }
     }
@@ -213,6 +216,7 @@ else
             await TaskRepository.DeleteItemAsync(task);
             _tasks.Remove(task);
         }
+        ToastService.ShowToast(MBToastLevel.Success, "All cleaned up!");
         StateHasChanged();
     }
 

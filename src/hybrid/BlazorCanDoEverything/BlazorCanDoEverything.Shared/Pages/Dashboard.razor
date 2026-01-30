@@ -4,6 +4,7 @@
 @inject ICategoryRepository CategoryRepository
 @inject SeedDataService SeedDataService
 @inject NavigationManager Navigation
+@inject IMBToastService ToastService
 
 <PageTitle>Dashboard</PageTitle>
 
@@ -124,6 +125,7 @@ else
             await TaskRepository.DeleteItemAsync(task);
             _tasks.Remove(task);
         }
+        ToastService.ShowToast(MBToastLevel.Success, "All cleaned up!");
         StateHasChanged();
     }
 }

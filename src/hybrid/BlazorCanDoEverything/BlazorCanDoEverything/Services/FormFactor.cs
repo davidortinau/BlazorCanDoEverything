@@ -13,4 +13,10 @@ public class FormFactor : IFormFactor
     {
         return DeviceInfo.Platform.ToString() + " - " + DeviceInfo.VersionString;
     }
+
+    public bool IsMobile()
+    {
+        return DeviceInfo.Idiom == DeviceIdiom.Phone &&
+               (DeviceInfo.Platform == DevicePlatform.iOS || DeviceInfo.Platform == DevicePlatform.Android);
+    }
 }

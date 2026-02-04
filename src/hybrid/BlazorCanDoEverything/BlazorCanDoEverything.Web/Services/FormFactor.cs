@@ -13,4 +13,9 @@ public class FormFactor : IFormFactor
     {
         return Environment.OSVersion.ToString();
     }
+
+    public bool IsMobile()
+    {
+        return false;
+    }
 }

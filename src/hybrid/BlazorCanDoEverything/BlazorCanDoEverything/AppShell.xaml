@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:pages="clr-namespace:BlazorCanDoEverything.Pages"
+            x:Class="BlazorCanDoEverything.AppShell">
+
+    <pages:DashboardPage Title="Dashboard" IconImageSource="dashboard.png" />
+    <pages:ProjectsPage Title="Projects" IconImageSource="folder.png" />
+    <pages:ManageMetaPage Title="Manage" IconImageSource="settings.png" />
+
+</TabbedPage>

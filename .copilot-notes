@@ -1,0 +1,5 @@
+# Device Notes
+Prefer using already-running simulators. Check with:
+  xcrun simctl list devices | grep Booted
+
+Currently used: iPhone 16 Pro (check for booted instance first)

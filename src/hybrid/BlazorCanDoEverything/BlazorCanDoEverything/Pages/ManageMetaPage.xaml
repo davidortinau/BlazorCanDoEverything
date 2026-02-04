@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:shared="clr-namespace:BlazorCanDoEverything.Shared;assembly=BlazorCanDoEverything.Shared"
              x:Class="BlazorCanDoEverything.Pages.ManageMetaPage"
-             Title="Manage">
+             Title="Manage"
+             SafeAreaEdges="None">
 
     <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html" StartPath="/manage">
         <BlazorWebView.RootComponents>

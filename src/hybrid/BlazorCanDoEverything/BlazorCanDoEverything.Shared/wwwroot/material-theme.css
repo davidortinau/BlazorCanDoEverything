@@ -128,7 +128,8 @@ body {
 .app-header {
     background-color: var(--app-header-bg);
     color: var(--app-header-text);
-    padding: 0.75rem 1rem;
+    /* Use safe-area-inset-top to push content below status bar while background extends edge-to-edge */
+    padding: calc(env(safe-area-inset-top, 0px) + 0.75rem) calc(env(safe-area-inset-right, 0px) + 1rem) 0.75rem calc(env(safe-area-inset-left, 0px) + 1rem);
     display: flex;
     align-items: center;
     gap: 1rem;

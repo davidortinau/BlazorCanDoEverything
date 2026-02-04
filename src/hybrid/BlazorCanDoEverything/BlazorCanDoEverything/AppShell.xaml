@@ -4,8 +4,8 @@
             xmlns:pages="clr-namespace:BlazorCanDoEverything.Pages"
             x:Class="BlazorCanDoEverything.AppShell">
 
-    <pages:DashboardPage Title="Dashboard" IconImageSource="dashboard.png" />
-    <pages:ProjectsPage Title="Projects" IconImageSource="folder.png" />
-    <pages:ManageMetaPage Title="Manage" IconImageSource="settings.png" />
+    <pages:DashboardPage Title="Dashboard" IconImageSource="{StaticResource IconDashboard}" />
+    <pages:ProjectsPage Title="Projects" IconImageSource="{StaticResource IconProjects}" />
+    <pages:ManageMetaPage Title="Manage" IconImageSource="{StaticResource IconMeta}" />
 
 </TabbedPage>

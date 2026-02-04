@@ -13,6 +13,16 @@
     margin: 0 auto;
 }
 
+/* Mobile layout - no sidebar, content takes full width */
+::deep .mobile-layout .app-main {
+    display: block;
+}
+
+::deep .mobile-layout .app-content {
+    margin-left: 0;
+    width: 100%;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;

@@ -1,7 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JS
+@inject BlazorCanDoEverything.Shared.Services.IFormFactor FormFactor
 
-<div class="app-layout @(_isDarkMode ? "dark-theme" : "")" data-theme="@(_isDarkMode ? "dark" : "light")">
+<div class="app-layout @(_isDarkMode ? "dark-theme" : "") @(_isMobile ? "mobile-layout" : "")" data-theme="@(_isDarkMode ? "dark" : "light")">
     <header class="app-header">
         <span class="material-icons">task_alt</span>
         <h1>Todo App</h1>
@@ -10,7 +11,10 @@
     </header>
 
     <div class="app-main">
-        <NavMenu />
+        @if (!_isMobile)
+        {
+            <NavMenu />
+        }
         <main class="app-content">
             @Body
         </main>
@@ -25,6 +29,12 @@
 
 @code {
     private bool _isDarkMode = false;
+    private bool _isMobile = false;
+
+    protected override void OnInitialized()
+    {
+        _isMobile = FormFactor.IsMobile();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
